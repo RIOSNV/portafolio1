@@ -1,0 +1,1327 @@
+<!-- Rios -->
+<!-- Estructura básica del documento HTML -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<style>
+  button {
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  /* Efecto flotante exagerado */
+  button:hover {
+    transform: translateY(-12px) scale(1.05); /* se eleva más y crece */
+    box-shadow: 0 15px 25px rgba(0,0,0,0.35); /* sombra más intensa */
+  }
+
+  /* Al presionar vuelve fuerte */
+  button:active {
+    transform: translateY(2px) scale(0.98);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.25);
+  }
+</style>
+
+
+
+    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora Expresiones Algebraicas</title>
+<style>
+    /*CAMBIO DE COLORES
+
+
+
+    /* Fondo parpadeante en tonos morados */
+body {
+  animation: parpadeoMorado 12s infinite alternate;
+}
+
+@keyframes parpadeoMorado {
+  0%   { background-color: #2d0a31; }   /* morado oscuro */
+  25%  { background-color: #5a189a; }   /* violeta intenso */
+  50%  { background-color: #7b2cbf; }   /* morado medio */
+  75%  { background-color: #9d4edd; }   /* lavanda fuerte */
+  100% { background-color: #c77dff; }   /* morado claro */
+}
+     
+
+
+    /* =========================
+       Variables de colores
+       ========================= */
+:root {
+    --azul-oscuro: #5b1e8a;
+    --azul-claro: #3b82f6;
+    --oro: #f59e0b;
+    --blanco: #ffffff;
+    --negro: #000000;
+    --gris-claro: #f8fafc;
+    --gris-medio: #e2e8f0;
+    --sombra: rgba(62, 0, 63, 0.984);
+}
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--negro);
+    background-color: var(--gris-claro);
+}
+
+/* Encabezado */
+header {
+    background-color: var(--azul-oscuro);
+    color: var(--blanco);
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* Contenedor principal */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Grid de 2 columnas */
+.converter-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.column {
+    background-color: var(--blanco);
+    border: 2px solid var(--azul-claro);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px var(--sombra);
+}
+
+.column h2 {
+    color: var(--azul-oscuro);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    border-bottom: 2px solid var(--oro);
+    padding-bottom: 0.5rem;
+}
+
+/* Grupos de entrada */
+.input-group {
+    margin-bottom: 1rem;
+}
+
+.input-group label {
+    display: block;
+    color: var(--azul-oscuro);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--gris-medio);
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--azul-claro);
+}
+
+textarea::placeholder {
+    color: #9ca3af;
+    font-style: italic;
+}
+
+/* Botones */
+.convert-button {
+    width: 100%;
+    background-color: var(--azul-claro);
+    color: var(--blanco);
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.convert-button:hover {
+    background-color: var(--azul-oscuro);
+}
+
+.convert-button:active {
+    transform: translateY(1px);
+}
+
+/* Sección de carga de JSON */
+.json-loader-section {
+    background-color: var(--blanco);
+    border: 2px solid var(--oro);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px var(--sombra);
+}
+
+.json-loader-section h2 {
+    color: var(--azul-oscuro);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.json-loader {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.file-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#json-file-input {
+    display: none;
+}
+
+.file-input-label {
+    background-color: var(--oro);
+    color: var(--blanco);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.file-input-label:hover {
+    background-color: #d97706;
+}
+
+.file-name {
+    color: var(--azul-oscuro);
+    font-size: 0.9rem;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.load-button {
+    background-color: var(--azul-claro);
+    color: var(--blanco);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.load-button:hover:not(:disabled) {
+    background-color: var(--azul-oscuro);
+}
+
+.load-button:disabled {
+    background-color: var(--gris-medio);
+    cursor: not-allowed;
+}
+
+.reset-button {
+    background-color: var(--gris-medio);
+    color: var(--azul-oscuro);
+    border: 2px solid var(--azul-oscuro);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.reset-button:hover {
+    background-color: var(--azul-oscuro);
+    color: var(--blanco);
+}
+
+/* Sección de información */
+.info-section {
+    background-color: var(--blanco);
+    border: 2px solid var(--azul-claro);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px var(--sombra);
+}
+
+.info-section h2 {
+    color: var(--azul-oscuro);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.info-card {
+    background-color: var(--gris-claro);
+    border: 1px solid var(--gris-medio);
+    border-radius: 6px;
+    padding: 1rem;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--sombra);
+}
+
+.info-card h3 {
+    color: var(--azul-oscuro);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.metric {
+    display: flex;
+    flex-direction: column;
+}
+
+.metric-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--oro);
+    margin-bottom: 0.25rem;
+}
+
+.metric-label {
+    font-size: 0.8rem;
+    color: var(--azul-oscuro);
+}
+
+/* Sección de historial */
+.history-section {
+    background-color: var(--blanco);
+    border: 2px solid var(--azul-claro);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px var(--sombra);
+}
+
+.history-section h2 {
+    color: var(--azul-oscuro);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.history-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.clear-button, .export-button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.clear-button {
+    background-color: #ef4444;
+    color: var(--blanco);
+}
+
+.clear-button:hover {
+    background-color: #dc2626;
+}
+
+.export-button {
+    background-color: var(--oro);
+    color: var(--blanco);
+}
+
+.export-button:hover {
+    background-color: #d97706;
+}
+
+.history-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid var(--gris-medio);
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+/* Estilos de ítems del historial */
+.history-item {
+    border: 1px solid var(--gris-medio);
+    background: var(--gris-claro);
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--azul-oscuro);
+    font-weight: 600;
+}
+
+.history-content {
+    font-size: 0.95rem;
+}
+
+.no-history {
+    text-align: center;
+    color: var(--gris-medio);
+    font-style: italic;
+}
+
+/* Pie de página */
+footer {
+    background-color: var(--azul-oscuro);
+    color: var(--blanco);
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+footer p {
+    margin-bottom: 0.25rem;
+    opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .converter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .container {
+        padding: 1rem;
+    }
+
+    .json-loader {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .info-cards {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .history-controls {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .info-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Sección de resultados */
+.result-section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gris-medio);
+}
+
+.result-content h4 {
+    color: var(--azul-oscuro);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.result-output {
+    background-color: var(--gris-claro);
+    border: 1px solid var(--gris-medio);
+    border-radius: 4px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    min-height: 50px;
+}
+
+/* Botones de evaluación */
+.evaluation-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.satisfactory-btn {
+    background-color: #10b981;
+    color: var(--blanco);
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    flex: 1;
+    min-width: 120px;
+}
+
+.satisfactory-btn:hover {
+    background-color: #059669;
+}
+
+.improve-btn {
+    background-color: var(--oro);
+    color: var(--blanco);
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    flex: 1;
+    min-width: 120px;
+}
+
+.improve-btn:hover {
+    background-color: #d97706;
+}
+
+.add-pattern-btn {
+    background-color: var(--azul-claro);
+    color: var(--blanco);
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    flex: 1;
+    min-width: 120px;
+}
+
+.add-pattern-btn:hover {
+    background-color: var(--azul-oscuro);
+}
+
+
+</style>
+</head>
+<body>
+
+
+
+
+    <!-- Encabezado principal -->
+<header>
+        <h1>Calculadora de Expresiones</h1>
+        <p class="subtitle">Convierte entre lenguaje natural y expresiones algebraicas</p>
+    </header>
+
+    <!-- Contenedor principal de 2 columnas -->
+    <main class="container">
+        <div class="converter-grid">
+            <!-- Columna izquierda: Lenguaje Natural -->
+            <div class="column natural-column">
+                <h2>Lenguaje Natural</h2>
+                <div class="input-group">
+                    <label for="natural-input">Escribe en palabras tu expresión matemática</label>
+                    <textarea 
+                        id="natural-input" 
+                        placeholder="Ejemplo: La suma de a y b"
+                        rows="5"
+                        aria-label="Entrada en lenguaje natural"
+                    ></textarea>
+                </div>
+                <button id="convert-to-algebraic-btn" class="convert-button">
+                    Convertir a Expresión Algebraica
+                </button>
+                <div id="natural-result" class="result-section" style="display: none;">
+                    <div class="result-content">
+                        <h4>Resultado:</h4>
+                        <div id="natural-output" class="result-output"></div>
+                    </div>
+                    <div class="evaluation-buttons">
+                        <button id="natural-satisfactory-btn" class="satisfactory-btn">
+                            Resultado Satisfactorio
+                        </button>
+                        <button id="natural-improve-btn" class="improve-btn">
+                            Necesita Mejora
+                        </button>
+                        <button id="natural-add-pattern-btn" class="add-pattern-btn">
+                            Agregar Patrón
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna derecha: Expresión Algebraica -->
+            <div class="column algebraic-column">
+                <h2>Expresión Algebraica</h2>
+                <div class="input-group">
+                    <label for="algebraic-input">Escribe tu expresión matemática</label>
+                    <textarea 
+                        id="algebraic-input" 
+                        placeholder="Ejemplo: a^2 + b^2"
+                        rows="5"
+                        aria-label="Entrada de expresión algebraica"
+                    ></textarea>
+                </div>
+                <button id="convert-to-natural-btn" class="convert-button">
+                    Convertir a Lenguaje Natural
+                </button>
+                <div id="algebraic-result" class="result-section" style="display: none;">
+                    <div class="result-content">
+                        <h4>Resultado:</h4>
+                        <div id="algebraic-output" class="result-output"></div>
+                    </div>
+                    <div class="evaluation-buttons">
+                        <button id="algebraic-satisfactory-btn" class="satisfactory-btn">
+                            Resultado Satisfactorio
+                        </button>
+                        <button id="algebraic-improve-btn" class="improve-btn">
+                            Necesita Mejora
+                        </button>
+                        <button id="algebraic-add-pattern-btn" class="add-pattern-btn">
+                            Agregar Patrón
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de carga de JSON -->
+        <section class="json-loader-section">
+            <h2>Base de Datos de Patrones</h2>
+            <div class="json-loader">
+                <div class="file-input-wrapper">
+                    <input type="file" id="json-file-input" accept=".json" />
+                    <label for="json-file-input" class="file-input-label">
+                        Cargar archivo JSON
+                    </label>
+                    <span id="file-name" class="file-name">Ningún archivo seleccionado</span>
+                </div>
+                <button id="load-json-btn" class="load-button" disabled>
+                    Cargar Patrones
+                </button>
+                <button id="reset-json-btn" class="reset-button">
+                    Usar Patrones por Defecto
+                </button>
+            </div>
+        </section>
+
+        <!-- Tarjeta de información y métricas -->
+        <section class="info-section">
+            <h2>Información del Sistema</h2>
+            <div class="info-cards">
+                <div class="info-card">
+                    <h3>Patrones Cargados</h3>
+                    <div class="metric">
+                        <span class="metric-number" id="total-patterns">0</span>
+                        <span class="metric-label">expresiones disponibles</span>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>Archivo JSON</h3>
+                    <div class="metric">
+                        <span class="metric-number" id="file-size">0 KB</span>
+                        <span class="metric-label">tamaño del archivo</span>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>Conversiones</h3>
+                    <div class="metric">
+                        <span class="metric-number" id="conversions-count">0</span>
+                        <span class="metric-label">conversiones realizadas</span>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>Tasa de Satisfacción</h3>
+                    <div class="metric">
+                        <span class="metric-number" id="satisfaction-rate">0%</span>
+                        <span class="metric-label">conversiones satisfactorias</span>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>Última Actualización</h3>
+                    <div class="metric">
+                        <span class="metric-number" id="last-update">--</span>
+                        <span class="metric-label">patrones modificados</span>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>Complejidad Promedio</h3>
+                    <div class="metric">
+                        <span class="metric-number" id="avg-complexity">0</span>
+                        <span class="metric-label">palabras por expresión</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de historial de conversiones -->
+        <section class="history-section">
+            <h2>Historial de Conversiones</h2>
+            <div class="history-controls">
+                <button id="clear-history-btn" class="clear-button">
+                    Limpiar Historial
+                </button>
+                <button id="export-history-btn" class="export-button">
+                    Exportar Historial
+                </button>
+            </div>
+            <div id="conversion-history" class="history-list">
+                <p class="no-history">No hay conversiones realizadas aún</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Pie de página -->
+    <footer>
+        <p>Proyecto desarrollado para estudiantes del TSU en Desarrollo de Software y Negocios Digitales</p>
+        <p>Tecnológico de Software - Primer Cuatrimestre 2025</p>
+    </footer>
+
+<script>
+// =========================
+// Estado global
+// =========================
+let patternsData = null;
+let conversionHistory = [];
+let stats = {
+    totalConversions: 0,
+    satisfactoryConversions: 0,
+    totalPatterns: 0,
+    fileSize: 0,
+    lastUpdate: null
+};
+
+// =========================
+// Patrones por defecto
+// =========================
+const defaultPatterns = {
+    "patterns": [
+        {
+            "id": 1,
+            "natural": "La suma de {var1} y {var2}",
+            "algebraic": "{var1} + {var2}",
+            "category": "operaciones_basicas"
+        },
+        {
+            "id": 2,
+            "natural": "La resta de {var1} y {var2}",
+            "algebraic": "{var1} - {var2}",
+            "category": "operaciones_basicas"
+        },
+        {
+            "id": 3,
+            "natural": "El producto de {var1} por {var2}",
+            "algebraic": "{var1} × {var2}",
+            "category": "operaciones_basicas"
+        },
+        {
+            "id": 4,
+            "natural": "El cociente de {var1} sobre {var2}",
+            "algebraic": "{var1} ÷ {var2}",
+            "category": "operaciones_basicas"
+        },
+        {
+            "id": 5,
+            "natural": "La suma de los cuadrados de {var1} y {var2}",
+            "algebraic": "{var1}^2 + {var2}^2",
+            "category": "combinadas"
+        }
+    ]
+};
+
+// =========================
+// Inicialización
+// =========================
+document.addEventListener('DOMContentLoaded', () => {
+    loadPatterns(defaultPatterns);
+    setupEventListeners();
+    updateMetrics();
+});
+
+// =========================
+// Event Listeners
+// =========================
+function setupEventListeners() {
+    // Botones de conversión
+    document.getElementById('convert-to-algebraic-btn').addEventListener('click', convertNaturalToAlgebraic);
+    document.getElementById('convert-to-natural-btn').addEventListener('click', convertAlgebraicToNatural);
+
+    // Botones de evaluación - Columna Natural
+    document.getElementById('natural-satisfactory-btn').addEventListener('click', () => {
+        markAsSatisfactory('natural');
+    });
+    document.getElementById('natural-improve-btn').addEventListener('click', () => {
+        markForImprovement('natural');
+    });
+    document.getElementById('natural-add-pattern-btn').addEventListener('click', () => {
+        showAddPatternDialog('natural');
+    });
+
+    // Botones de evaluación - Columna Algebraica
+    document.getElementById('algebraic-satisfactory-btn').addEventListener('click', () => {
+        markAsSatisfactory('algebraic');
+    });
+    document.getElementById('algebraic-improve-btn').addEventListener('click', () => {
+        markForImprovement('algebraic');
+    });
+    document.getElementById('algebraic-add-pattern-btn').addEventListener('click', () => {
+        showAddPatternDialog('algebraic');
+    });
+
+    // Manejo de archivos JSON
+    document.getElementById('json-file-input').addEventListener('change', handleFileSelection);
+    document.getElementById('load-json-btn').addEventListener('click', loadJSONFile);
+    document.getElementById('reset-json-btn').addEventListener('click', resetToDefault);
+
+    // Historial
+    document.getElementById('clear-history-btn').addEventListener('click', clearHistory);
+    document.getElementById('export-history-btn').addEventListener('click', exportHistory);
+}
+
+// =========================
+// Conversiones
+// =========================
+function convertNaturalToAlgebraic() {
+    const input = document.getElementById('natural-input').value.trim();
+    if (!input) {
+        alert('Por favor, ingresa una expresión en lenguaje natural');
+        return;
+    }
+
+    const result = processNaturalToAlgebraic(input);
+    displayResult('natural', input, result);
+
+    stats.totalConversions++;
+    addToHistory('natural-to-algebraic', input, result);
+    updateMetrics();
+}
+
+function convertAlgebraicToNatural() {
+    const input = document.getElementById('algebraic-input').value.trim();
+    if (!input) {
+        alert('Por favor, ingresa una expresión algebraica');
+        return;
+    }
+
+    const result = processAlgebraicToNatural(input);
+    displayResult('algebraic', input, result);
+
+    stats.totalConversions++;
+    addToHistory('algebraic-to-natural', input, result);
+    updateMetrics();
+}
+
+// =========================
+// Procesadores
+// =========================
+function processNaturalToAlgebraic(input) {
+    if (!patternsData || !patternsData.patterns) {
+        return "Error: No hay patrones cargados";
+    }
+    const normalizedInput = input.toLowerCase();
+
+    for (let pattern of patternsData.patterns) {
+        const match = matchNaturalPattern(normalizedInput, pattern.natural);
+        if (match.isMatch) {
+            return substituteVariables(pattern.algebraic, match.variables);
+        }
+    }
+    return "No se encontró un patrón coincidente. Considera agregar este caso a los patrones.";
+}
+
+function processAlgebraicToNatural(input) {
+    if (!patternsData || !patternsData.patterns) {
+        return "Error: No hay patrones cargados";
+    }
+
+    const normalizedInput = normalizeAlgebraicExpression(input);
+
+    for (let pattern of patternsData.patterns) {
+        const match = matchAlgebraicPattern(normalizedInput, pattern.algebraic);
+        if (match.isMatch) {
+            return substituteVariables(pattern.natural, match.variables);
+        }
+    }
+    return "No se encontró un patrón coincidente. Considera agregar este caso a los patrones.";
+}
+
+// =========================
+// Matching de patrones
+// =========================
+function matchNaturalPattern(input, pattern) {
+    // Armar regex a partir del patrón con {variables}
+    let regex = pattern.toLowerCase();
+    const variables = {};
+    let varCounter = 0;
+
+    // Reemplazar variables con grupos de captura
+    regex = regex.replace(/\{(\w+)\}/g, (_m, varName) => {
+        variables[varName] = varCounter++;
+        return '([a-zA-Z0-9_]+)';
+    });
+
+    // Espacios flexibles
+    regex = regex.replace(/\s+/g, '\\s*');
+    regex = '^\\s*' + regex + '\\s*$';
+
+    const regexPattern = new RegExp(regex);
+    const match = input.match(regexPattern);
+
+    if (match) {
+        const extractedVars = {};
+        for (let [varName, index] of Object.entries(variables)) {
+            extractedVars[varName] = match[index + 1];
+        }
+        return { isMatch: true, variables: extractedVars };
+    }
+    return { isMatch: false, variables: {} };
+}
+
+function matchAlgebraicPattern(input, pattern) {
+    let normalizedInput = normalizeAlgebraicExpression(input);
+    let normalizedPattern = normalizeAlgebraicExpression(pattern);
+
+    // Escapar metacaracteres de regex presentes en el patrón normalizado
+    // + - * ^ (aunque * suele convertirse a ×, lo incluimos por seguridad)
+    let regex = normalizedPattern.replace(/[\+\-\*\^]/g, '\\$&');
+
+    // Reemplazar {variables} por grupos de captura
+    const variables = {};
+    let varCounter = 0;
+
+    regex = regex.replace(/\{(\w+)\}/g, (_m, varName) => {
+        variables[varName] = varCounter++;
+        return '([a-zA-Z0-9_]+)';
+    });
+
+    regex = '^\\s*' + regex + '\\s*$';
+
+    const regexPattern = new RegExp(regex);
+    const match = normalizedInput.match(regexPattern);
+
+    if (match) {
+        const extractedVars = {};
+        for (let [varName, index] of Object.entries(variables)) {
+            extractedVars[varName] = match[index + 1];
+        }
+        return { isMatch: true, variables: extractedVars };
+    }
+    return { isMatch: false, variables: {} };
+}
+
+// =========================
+/* Normalización de expresiones:
+   - Quita espacios
+   - ²/³ → ^2/^3
+   - * → × ; / → ÷ (para alinear con patrones por defecto)
+   - Minúsculas
+*/
+// =========================
+function normalizeAlgebraicExpression(expr) {
+    return expr
+        .replace(/\s+/g, '')
+        .replace(/²/g, '^2')
+        .replace(/³/g, '^3')
+        .replace(/\*/g, '×')
+        .replace(/\//g, '÷')
+        .toLowerCase();
+}
+
+// =========================
+// Utilidades
+// =========================
+function substituteVariables(template, variables) {
+    let result = template;
+    for (let [varName, value] of Object.entries(variables)) {
+        const rx = new RegExp(`\\{${varName}\\}`, 'g');
+        result = result.replace(rx, value);
+    }
+    return result;
+}
+
+function displayResult(column, _input, result) {
+    const resultSection = document.getElementById(`${column}-result`);
+    const outputElement = document.getElementById(`${column}-output`);
+    outputElement.textContent = result;
+    resultSection.style.display = 'block';
+}
+
+function markAsSatisfactory(_column) {
+    stats.satisfactoryConversions++;
+    updateMetrics();
+    showFeedback('Marcado como satisfactorio', 'success');
+}
+
+function markForImprovement(_column) {
+    showFeedback('Marcado para mejora. Considera agregar un nuevo patrón.', 'warning');
+}
+
+function showAddPatternDialog(column) {
+    const inputValue = document.getElementById(`${column === 'natural' ? 'natural' : 'algebraic'}-input`).value;
+    const outputValue = document.getElementById(`${column}-output`).textContent;
+
+    const naturalText = column === 'natural' ? inputValue : outputValue;
+    const algebraicText = column === 'natural' ? outputValue : inputValue;
+
+    const newNatural = prompt('Expresión en lenguaje natural:', naturalText || '');
+    if (newNatural === null || newNatural.trim() === '') return;
+
+    const newAlgebraic = prompt('Expresión algebraica:', algebraicText || '');
+    if (newAlgebraic === null || newAlgebraic.trim() === '') return;
+
+    const category = prompt('Categoría (opcional):', 'personalizado') || 'personalizado';
+    addNewPattern(newNatural.trim(), newAlgebraic.trim(), category.trim());
+}
+
+function addNewPattern(natural, algebraic, category = 'personalizado') {
+    if (!patternsData) {
+        patternsData = { patterns: [] };
+    }
+
+    const newId = Math.max(0, ...patternsData.patterns.map(p => p.id || 0)) + 1;
+    const newPattern = { id: newId, natural, algebraic, category };
+
+    patternsData.patterns.push(newPattern);
+    stats.totalPatterns = patternsData.patterns.length;
+    stats.lastUpdate = new Date().toLocaleString('es-ES', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+    });
+    updateMetrics();
+
+    showFeedback(`Nuevo patrón agregado: "${natural}" → "${algebraic}"`, 'success');
+}
+
+function loadPatterns(data) {
+    patternsData = data;
+    stats.totalPatterns = data.patterns ? data.patterns.length : 0;
+    stats.lastUpdate = new Date().toLocaleString('es-ES', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+    });
+    updateMetrics();
+}
+
+function handleFileSelection() {
+    const fileInput = document.getElementById('json-file-input');
+    const fileName = document.getElementById('file-name');
+    const loadButton = document.getElementById('load-json-btn');
+
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        fileName.textContent = file.name;
+        stats.fileSize = Math.max(1, Math.round(file.size / 1024));
+        loadButton.disabled = false;
+    } else {
+        fileName.textContent = 'Ningún archivo seleccionado';
+        stats.fileSize = 0;
+        loadButton.disabled = true;
+    }
+    updateMetrics();
+}
+
+function loadJSONFile() {
+    const fileInput = document.getElementById('json-file-input');
+    if (fileInput.files.length === 0) {
+        alert('Por favor, selecciona un archivo JSON');
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+        try {
+            const jsonData = JSON.parse(e.target.result);
+
+            if (!jsonData.patterns || !Array.isArray(jsonData.patterns)) {
+                throw new Error('El archivo JSON debe tener una propiedad "patterns" que sea un array');
+            }
+
+            loadPatterns(jsonData);
+            showFeedback(`Archivo cargado exitosamente: ${file.name}`, 'success');
+        } catch (error) {
+            alert(`Error al cargar el archivo: ${error.message}`);
+        }
+    };
+
+    reader.readAsText(file);
+}
+
+function resetToDefault() {
+    if (confirm('¿Estás seguro de que quieres resetear a los patrones por defecto?')) {
+        loadPatterns(defaultPatterns);
+        stats.fileSize = 0;
+        document.getElementById('file-name').textContent = 'Ningún archivo seleccionado';
+        document.getElementById('json-file-input').value = '';
+        showFeedback('Patrones reseteados a valores por defecto', 'info');
+    }
+}
+
+function addToHistory(type, input, output) {
+    const historyItem = {
+        timestamp: new Date().toLocaleString('es-ES'),
+        type,
+        input,
+        output
+    };
+
+    conversionHistory.unshift(historyItem);
+    if (conversionHistory.length > 50) conversionHistory.pop();
+
+    updateHistoryDisplay();
+}
+
+function updateHistoryDisplay() {
+    const historyContainer = document.getElementById('conversion-history');
+
+    if (conversionHistory.length === 0) {
+        historyContainer.innerHTML = '<p class="no-history">No hay conversiones realizadas aún</p>';
+        return;
+    }
+
+    const historyHTML = conversionHistory.map(item => `
+        <div class="history-item">
+            <div class="history-header">
+                <span class="history-type">${item.type === 'natural-to-algebraic' ? 'Natural a Algebraico' : 'Algebraico a Natural'}</span>
+                <span class="history-timestamp">${item.timestamp}</span>
+            </div>
+            <div class="history-content">
+                <div><strong>Entrada:</strong> ${item.input}</div>
+                <div><strong>Resultado:</strong> ${item.output}</div>
+            </div>
+        </div>
+    `).join('');
+
+    historyContainer.innerHTML = historyHTML;
+}
+
+function clearHistory() {
+    if (confirm('¿Estás seguro de que quieres limpiar el historial?')) {
+        conversionHistory = [];
+        updateHistoryDisplay();
+        showFeedback('Historial limpiado', 'info');
+    }
+}
+
+function exportHistory() {
+    if (conversionHistory.length === 0) {
+        alert('No hay historial para exportar');
+        return;
+    }
+
+    const dataStr = JSON.stringify(conversionHistory, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(dataBlob);
+    link.download = `historial_conversiones_${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+
+    showFeedback('Historial exportado exitosamente', 'success');
+}
+
+function updateMetrics() {
+    document.getElementById('total-patterns').textContent = stats.totalPatterns;
+    document.getElementById('file-size').textContent = stats.fileSize > 0 ? `${stats.fileSize} KB` : '0 KB';
+    document.getElementById('conversions-count').textContent = stats.totalConversions;
+
+    const satisfactionRate = stats.totalConversions > 0
+        ? Math.round((stats.satisfactoryConversions / stats.totalConversions) * 100)
+        : 0;
+    document.getElementById('satisfaction-rate').textContent = `${satisfactionRate}%`;
+
+    document.getElementById('last-update').textContent = stats.lastUpdate || '--';
+
+    const avgComplexity = calculateAverageComplexity();
+    document.getElementById('avg-complexity').textContent = avgComplexity;
+}
+
+function calculateAverageComplexity() {
+    if (!patternsData || !patternsData.patterns || patternsData.patterns.length === 0) {
+        return 0;
+    }
+    const totalWords = patternsData.patterns.reduce((sum, pattern) => {
+        const wordCount = pattern.natural.trim().split(/\s+/).length;
+        return sum + wordCount;
+    }, 0);
+    return Math.round(totalWords / patternsData.patterns.length);
+}
+
+function showFeedback(message, type = 'info') {
+    let feedbackElement = document.getElementById('feedback-message');
+    if (!feedbackElement) {
+        feedbackElement = document.createElement('div');
+        feedbackElement.id = 'feedback-message';
+        feedbackElement.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        `;
+        document.body.appendChild(feedbackElement);
+    }
+
+    const colors = {
+        'success': '#10b981',
+        'error': '#ef4444',
+        'warning': '#f59e0b',
+        'info': '#3b82f6'
+    };
+
+    feedbackElement.style.backgroundColor = colors[type] || colors['info'];
+    feedbackElement.textContent = message;
+    feedbackElement.style.opacity = '1';
+
+    setTimeout(() => {
+        feedbackElement.style.opacity = '0';
+    }, 3000);
+}
+</script>
+</body>
+
+<style>
+  /* Oro y glow suave */
+  :root { --oro: #f59e0b; }
+
+  /* Aplica a botones nativos y a cualquier [role="button"] */
+  button, [role="button"] {
+    transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease,
+                transform 80ms ease;
+    outline: none;
+  }
+
+  /* Hover/focus: luz dorada */
+  button:hover, [role="button"]:hover,
+  button:focus-visible, [role="button"]:focus-visible {
+    background: var(--oro) !important;
+    color: #111827 !important;          /* gris muy oscuro para contraste */
+    box-shadow: 0 0 0.6rem rgba(245, 158, 11, 0.55), 0 0 1.2rem rgba(245, 158, 11, 0.35);
+  }
+
+  /* “tap” sutil al presionar */
+  button:active, [role="button"]:active {
+    transform: scale(0.98);
+    box-shadow: 0 0 0.35rem rgba(245, 158, 11, 0.55) inset;
+  }
+
+  /* Respeto a usuarios con menos animación */
+  @media (prefers-reduced-motion: reduce) {
+    button, [role="button"] {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Campanita leve con Web Audio (sin archivos externos)
+  (function () {
+    let audioCtx;
+    function ping(vol = 0.02, freqA = 1318.51, freqB = 1567.98, dur = 0.10) {
+      // inicia contexto al primer toque (por políticas del navegador)
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const now = audioCtx.currentTime;
+
+      // Mezcla de dos osciladores tipo 'triangle' para timbre "campanita"
+      const g = audioCtx.createGain();
+      g.gain.value = vol;
+      g.connect(audioCtx.destination);
+
+      const o1 = audioCtx.createOscillator();
+      o1.type = 'triangle';
+      o1.frequency.setValueAtTime(freqA, now);
+      o1.connect(g);
+
+      const o2 = audioCtx.createOscillator();
+      o2.type = 'triangle';
+      o2.frequency.setValueAtTime(freqB, now);
+      o2.connect(g);
+
+      // Envolvente rápida (fade out corto para que no moleste)
+      g.gain.setValueAtTime(vol, now);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+      o1.start(now);
+      o2.start(now);
+      o1.stop(now + dur);
+      o2.stop(now + dur);
+    }
+
+    // Delegación: funciona para TODOS los botones presentes y futuros
+    document.addEventListener('pointerdown', (ev) => {
+      const el = ev.target.closest('button, [role="button"]');
+      if (!el) return;
+
+      // Permite ajustar volumen por elemento: data-chime="0.01" (opcional)
+      const volAttr = parseFloat(el.getAttribute('data-chime') || '0.02');
+      // Muy leve por defecto; ajusta si quieres más/menos volumen
+      ping(volAttr);
+    }, { capture: true });
+  })();
+
+</script>
+</html>

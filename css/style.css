@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #290039 0%, #6600b9 100%);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* HEADER */
+header {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+header p {
+    opacity: 0.8;
+}
+
+
+/* CONTENEDOR PRINCIPAL */
+.container {
+    flex: 1;
+    padding: 20px;
+}
+
+/* GRID DE ACTIVIDADES */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 25px;
+    border-radius: 15px;
+    text-decoration: none;
+    color: white;
+    backdrop-filter: blur(6px);
+    transition: 0.3s;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.card:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.card h2 {
+    font-size: 1.6rem;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.card p {
+    opacity: 0.9;
+    font-size: 0.95rem;
+}
+
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 15px;
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+
+/* MODO CLARO */
+body.light-mode {
+    background: #f4f4f4;
+    color: #333;
+}
+
+body.light-mode .card {
+    background: rgba(0, 0, 0, 0.08);
+    color: #222;
+}
+
+body.light-mode header,
+body.light-mode footer {
+    color: #222;
+}
