@@ -1,0 +1,684 @@
+<!-- Estructura básica del documento HTML -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Simbólica Ecuaciones Lineales</title>
+<style>
+    body {
+    font-family: 'Creepster', cursive !important ;
+    background-color: #48007b;
+    color: #ffffff;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: #270061;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgb(146, 58, 255);
+    width: 100%;
+    max-width: 900px;
+}
+
+h1 {
+    color: #ffffff;
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 2.2em;
+}
+
+h2 {
+    color: #ffffff;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 10px;
+    margin-top: 20px;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #7c00f8;
+    margin: 30px 0;
+}
+
+.solver-section {
+    margin-bottom: 30px;
+}
+
+.solver-section p {
+    margin-bottom: 15px;
+    color: #555;
+}
+
+/* Estilos para inputs */
+#ecuacion,
+#formulaLiteral {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    font-family: 'Creepster', cursive !important ;
+}
+
+.formula-input-container {
+    margin-bottom: 20px;
+}
+
+.formula-input-container label {
+    display: block;
+    font-weight: bold;
+    color: #34495e;
+    margin-bottom: 8px;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.result-box {
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    color: #2c3e50;
+    margin-top: 15px;
+    min-height: 20px;
+}
+
+.result-box:empty {
+    display: none;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-weight: bold;
+    margin-top: 10px;
+    min-height: 20px;
+}
+
+/* Estilos para la tabla de despejes */
+.result-box table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background-color: white;
+}
+
+.result-box table thead {
+    background-color: #34495e;
+    color: white;
+}
+
+.result-box table th,
+.result-box table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #bdc3c7;
+}
+
+.result-box table th {
+    font-weight: bold;
+}
+
+.result-box table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.result-box table tbody tr:hover {
+    background-color: #e8f4f8;
+}
+
+.result-box pre {
+    margin: 0;
+    font-family: 'Creepster', cursive !important ;
+    font-size: 1em;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.result-box .formula-original {
+    background-color: #d5f4e6;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.result-box .nota-didactica {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 12px;
+    margin-top: 15px;
+    font-size: 0.95em;
+    color: #856404;
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: auto 1fr auto 1fr;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.input-grid label {
+    font-weight: bold;
+    color: #34495e;
+    text-align: right;
+}
+
+.input-grid input[type="number"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+}
+</style> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora Simbólica de Ecuaciones by Rodrigo Rios</h1>
+
+        <section class="solver-section">
+            <h2>1. Solución de Ecuaciones de una Variable (x)</h2>
+            <p>Introduce la ecuación lineal para despejar <strong>x</strong> (ej: 2x + 3 = x + 8):</p>
+            <input type="text" id="ecuacion" value="2x + 3 = x + 8">
+            <button onclick="resolverEcuacionParseada()">Resolver</button>
+            <div id="resDespejeParseado" class="result-box"></div>
+            <div id="mensajeError" class="error-message"></div>
+        </section>
+
+        <hr>
+
+        <section class="solver-section">
+            <h2>2. Despeje Simbólico de Fórmulas</h2>
+            <p>Introduce cualquier fórmula matemática (ej: C = 5(F - 32)/9):</p>
+            
+            <div class="formula-input-container">
+                <label for="formulaLiteral">Fórmula:</label>
+                <input type="text" id="formulaLiteral" value="C = 5(F - 32)/9" placeholder="Ej: T = F*c/r">
+            </div>
+            
+            <button onclick="procesarFormulaLiteral()">Generar Despejes Simbólicos</button>
+
+            <div id="resFormulaLiteral" class="result-box"></div>
+            <div id="mensajeErrorFormula" class="error-message"></div>
+        </section>
+    </div>
+<script>
+    // Utilidad para limpiar strings
+function cleanString(str) {
+    return str.replace(/\s+/g, '');
+}
+
+// --- PARTE 1: Solución de Ecuaciones de una Variable (x) ---
+
+/**
+ * Resuelve ecuaciones lineales de una variable usando álgebra simbólica
+ */
+function resolverEcuacionParseada() {
+    const ecuacionStr = document.getElementById('ecuacion').value;
+    const resBox = document.getElementById('resDespejeParseado');
+    const errorBox = document.getElementById('mensajeError');
+
+    resBox.innerHTML = '';
+    errorBox.innerText = '';
+
+    try {
+        // Dividir por el signo igual
+        const partes = ecuacionStr.split('=');
+        if (partes.length !== 2) {
+            throw new Error("La ecuación debe contener exactamente un signo '='");
+        }
+
+        const ladoIzq = partes[0].trim();
+        const ladoDer = partes[1].trim();
+
+        // Crear la ecuación en formato: lado_izquierdo - lado_derecho
+        const ecuacionFormateada = `(${ladoIzq}) - (${ladoDer})`;
+
+        // Parsear y simplificar
+        const nodo = math.parse(ecuacionFormateada);
+        const simplificado = math.simplify(nodo);
+
+        // Resolver manualmente para x
+        // Formato típico después de simplificar: ax + b = 0
+        const coeficientes = extraerCoeficientes(simplificado.toString());
+        const solucion = -coeficientes.b / coeficientes.a;
+
+        // Mostrar resultado
+        resBox.innerHTML = `
+            <div class="formula-original">
+                <strong>Ecuación Original:</strong> ${ecuacionStr}
+            </div>
+            <p><strong>Solución:</strong> x = ${solucion}</p>
+            <p><strong>Ecuación Simplificada:</strong> ${simplificado.toString()} = 0</p>
+        `;
+    } catch (error) {
+        errorBox.innerText = `Error: ${error.message}`;
+    }
+}
+
+/**
+ * Extrae coeficientes de una ecuación lineal simplificada
+ */
+function extraerCoeficientes(ecuacion) {
+    // Eliminar espacios
+    ecuacion = ecuacion.replace(/\s+/g, '');
+
+    let a = 0; // Coeficiente de x
+    let b = 0; // Término independiente
+
+    // Buscar términos con x
+    const regexX = /([+-]?\d*\.?\d*)\*?x/g;
+    let match;
+    while ((match = regexX.exec(ecuacion)) !== null) {
+        let coef = match[1];
+        if (coef === '' || coef === '+') coef = '1';
+        if (coef === '-') coef = '-1';
+        a += parseFloat(coef);
+    }
+
+    // Buscar términos constantes (sin x)
+    const sinX = ecuacion.replace(/[+-]?\d*\.?\d*\*?x/g, '');
+    if (sinX) {
+        try {
+            b = math.evaluate(sinX);
+        } catch (e) {
+            b = 0;
+        }
+    }
+
+    return { a, b };
+}
+
+// --- PARTE 2: Despeje Simbólico de Fórmulas ---
+
+/**
+ * Extrae todas las variables únicas de una fórmula
+ */
+function extractVariables(formulaStr) {
+    const matches = formulaStr.match(/[a-zA-Z][a-zA-Z0-9]*/g);
+    if (!matches) return [];
+    return Array.from(new Set(matches));
+}
+
+/**
+ * Despeja una variable de una fórmula
+ */
+function despejarVariable(expresionOriginal, variableObjetivo, variableDespejada) {
+    try {
+        // Limpiar espacios
+        let expresion = expresionOriginal.replace(/\s+/g, '');
+
+        // CASO ESPECIAL: Expresiones con paréntesis tipo coef(var ± const)/div
+        // Ejemplo: 5(F-32)/9, despejar F
+        const patronComplejo = /(\d*\.?\d*)\(([a-zA-Z]+)\s*([+-])\s*(\d+\.?\d*)\)\s*\/\s*(\d+\.?\d*)/;
+        const matchComplejo = expresion.match(patronComplejo);
+
+        if (matchComplejo && matchComplejo[2] === variableObjetivo) {
+            const coef1 = matchComplejo[1] || '1';
+            const operador = matchComplejo[3];
+            const constante = matchComplejo[4];
+            const divisor = matchComplejo[5];
+
+            const operadorInverso = operador === '-' ? '+' : '-';
+
+            if (coef1 === '1') {
+                return `(${variableDespejada}) * (${divisor}) ${operadorInverso} ${constante}`;
+            } else {
+                return `(${variableDespejada}) * (${divisor}) / (${coef1}) ${operadorInverso} ${constante}`;
+            }
+        }
+
+        // CASO: Suma o resta simple
+        // Ejemplo: 14 - pOH, despejar pOH -> pOH = 14 - pH
+        if (expresion.includes('+') || expresion.includes('-')) {
+            const resultado = despejarSumaResta(expresion, variableObjetivo, variableDespejada);
+            if (resultado !== null) {
+                return resultado;
+            }
+        }
+
+        // CASO: División simple
+        if (expresion.includes('/')) {
+            const partes = dividirPorOperadorPrincipal(expresion, '/');
+            const numerador = partes[0];
+            const denominador = partes[1];
+
+            // Verificar si la variable está en el numerador o denominador
+            if (numerador.includes(variableObjetivo)) {
+                // Variable en numerador
+                if (numerador === variableObjetivo) {
+                    // varObjetivo / denominador
+                    return `(${variableDespejada}) * (${denominador})`;
+                } else {
+                    // Multiplicación en numerador: a*b*varObjetivo / denominador
+                    const factoresNum = extraerFactoresMultiplicacion(numerador);
+                    const otrosFactores = factoresNum.filter(f => f !== variableObjetivo);
+
+                    if (otrosFactores.length === 0) {
+                        return `(${variableDespejada}) * (${denominador})`;
+                    } else {
+                        return `(${variableDespejada}) * (${denominador}) / (${otrosFactores.join(' * ')})`;
+                    }
+                }
+            } else if (denominador.includes(variableObjetivo)) {
+                // Variable en denominador
+                if (denominador === variableObjetivo) {
+                    // numerador / varObjetivo
+                    return `(${numerador}) / (${variableDespejada})`;
+                } else {
+                    // Multiplicación en denominador
+                    const factoresDen = extraerFactoresMultiplicacion(denominador);
+                    const otrosFactores = factoresDen.filter(f => f !== variableObjetivo);
+
+                    if (otrosFactores.length === 0) {
+                        return `(${numerador}) / (${variableDespejada})`;
+                    } else {
+                        return `(${numerador}) / ((${variableDespejada}) * (${otrosFactores.join(' * ')}))`;
+                    }
+                }
+            }
+        }
+
+        // CASO: Multiplicación simple (sin división)
+        if (expresion.includes('*')) {
+            const factores = extraerFactoresMultiplicacion(expresion);
+            const otrosFactores = factores.filter(f => f !== variableObjetivo);
+
+            if (otrosFactores.length === 0) {
+                return variableDespejada;
+            } else if (otrosFactores.length === 1) {
+                return `(${variableDespejada}) / (${otrosFactores[0]})`;
+            } else {
+                return `(${variableDespejada}) / (${otrosFactores.join(' * ')})`;
+            }
+        }
+
+        // CASO: Variable sola
+        if (expresion === variableObjetivo) {
+            return variableDespejada;
+        }
+
+        return expresion;
+
+    } catch (error) {
+        return `Error: ${error.message}`;
+    }
+}
+
+/**
+ * Despeja una variable de una expresión con suma o resta
+ */
+function despejarSumaResta(expresion, variableObjetivo, variableDespejada) {
+    // Parsear la expresión en términos
+    const terminos = parsearTerminos(expresion);
+
+    // Encontrar el término que contiene la variable objetivo
+    let terminoConVariable = null;
+    let otrosTerminos = [];
+
+    for (const termino of terminos) {
+        if (termino.texto.includes(variableObjetivo)) {
+            terminoConVariable = termino;
+        } else {
+            otrosTerminos.push(termino);
+        }
+    }
+
+    if (!terminoConVariable) {
+        return null;
+    }
+
+    // Construir el despeje
+    // Si tenemos: A = B + C - D, y queremos despejar C
+    // Entonces: C = A - B + D
+
+    let resultado = variableDespejada;
+
+    for (const termino of otrosTerminos) {
+        // Invertir el signo
+        const signoInverso = termino.signo === '+' ? '-' : '+';
+        resultado += ` ${signoInverso} ${termino.texto}`;
+    }
+
+    // Si el término con la variable tiene coeficiente o signo negativo
+    if (terminoConVariable.texto !== variableObjetivo) {
+        // Caso: tiene coeficiente (ej: 2*var)
+        if (terminoConVariable.texto.includes('*')) {
+            const partes = terminoConVariable.texto.split('*');
+            const coef = partes.find(p => p !== variableObjetivo);
+            resultado = `(${resultado}) / (${coef})`;
+        }
+    }
+
+    // Si el signo era negativo, invertir todo
+    if (terminoConVariable.signo === '-') {
+        resultado = `-(${resultado})`;
+    }
+
+    return resultado;
+}
+
+/**
+ * Parsea una expresión en términos con sus signos
+ */
+function parsearTerminos(expresion) {
+    const terminos = [];
+    let actual = '';
+    let signo = '+';
+    let nivel = 0;
+
+    for (let i = 0; i < expresion.length; i++) {
+        const char = expresion[i];
+
+        if (char === '(') {
+            nivel++;
+            actual += char;
+        } else if (char === ')') {
+            nivel--;
+            actual += char;
+        } else if ((char === '+' || char === '-') && nivel === 0 && actual !== '') {
+            terminos.push({ signo: signo, texto: actual });
+            signo = char;
+            actual = '';
+        } else if ((char === '+' || char === '-') && nivel === 0 && actual === '') {
+            signo = char;
+        } else {
+            actual += char;
+        }
+    }
+
+    if (actual) {
+        terminos.push({ signo: signo, texto: actual });
+    }
+
+    return terminos;
+}
+
+/**
+ * Divide una expresión por el operador principal (respetando paréntesis)
+ */
+function dividirPorOperadorPrincipal(expresion, operador) {
+    let nivel = 0;
+    let ultimaPosicion = -1;
+
+    // Buscar el operador al nivel 0 de paréntesis (de derecha a izquierda para división)
+    for (let i = expresion.length - 1; i >= 0; i--) {
+        const char = expresion[i];
+
+        if (char === ')') {
+            nivel++;
+        } else if (char === '(') {
+            nivel--;
+        } else if (char === operador && nivel === 0) {
+            ultimaPosicion = i;
+            break;
+        }
+    }
+
+    if (ultimaPosicion === -1) {
+        return [expresion];
+    }
+
+    const parte1 = expresion.substring(0, ultimaPosicion);
+    const parte2 = expresion.substring(ultimaPosicion + 1);
+
+    return [parte1, parte2];
+}
+
+/**
+ * Extrae factores de una multiplicación (respetando paréntesis)
+ */
+function extraerFactoresMultiplicacion(expresion) {
+    const factores = [];
+    let actual = '';
+    let nivel = 0;
+
+    for (let i = 0; i < expresion.length; i++) {
+        const char = expresion[i];
+
+        if (char === '(') {
+            nivel++;
+            actual += char;
+        } else if (char === ')') {
+            nivel--;
+            actual += char;
+        } else if (char === '*' && nivel === 0) {
+            if (actual) {
+                factores.push(actual);
+                actual = '';
+            }
+        } else {
+            actual += char;
+        }
+    }
+
+    if (actual) {
+        factores.push(actual);
+    }
+
+    return factores;
+}
+
+/**
+ * Procesa la fórmula y genera todos los despejes posibles
+ */
+function procesarFormulaLiteral() {
+    const formulaStr = document.getElementById('formulaLiteral').value;
+    const resBox = document.getElementById('resFormulaLiteral');
+    const errorBox = document.getElementById('mensajeErrorFormula');
+
+    resBox.innerHTML = '';
+    errorBox.innerText = '';
+
+    try {
+        // Dividir por el signo igual
+        const partes = formulaStr.split('=');
+        if (partes.length !== 2) {
+            throw new Error("La fórmula debe contener exactamente un signo '='");
+        }
+
+        const ladoIzq = partes[0].trim();
+        const ladoDer = partes[1].trim();
+
+        // Extraer todas las variables
+        const variables = extractVariables(formulaStr);
+
+        if (variables.length < 2) {
+            throw new Error("Se necesitan al menos 2 variables distintas en la fórmula");
+        }
+
+        // Construir tabla de despejes
+        let htmlTable = `
+            <div class="formula-original">
+                <strong>Fórmula Original:</strong> ${formulaStr}
+            </div>
+            <p><strong>Variables detectadas:</strong> ${variables.join(', ')}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Variable Despejada</th>
+                        <th>Fórmula Resultante</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        // Generar despeje para cada variable
+        for (const variable of variables) {
+            let formulaDespejada;
+
+            // Si la variable está en el lado izquierdo, mostrar la fórmula original
+            if (ladoIzq === variable) {
+                formulaDespejada = `${variable} = ${ladoDer}`;
+            } else {
+                // Necesitamos despejar esta variable del lado derecho
+                const resultado = despejarVariable(ladoDer, variable, ladoIzq);
+                formulaDespejada = `${variable} = ${resultado}`;
+            }
+
+            htmlTable += `
+                <tr>
+                    <td><strong>${variable}</strong></td>
+                    <td><pre>${formulaDespejada}</pre></td>
+                </tr>
+            `;
+        }
+
+        htmlTable += `
+                </tbody>
+            </table>
+            <div class="nota-didactica">
+                <strong>Nota:</strong> Los despejes son generados usando manipulación algebraica directa.
+                Soporta suma, resta, multiplicación, división y expresiones con paréntesis.
+            </div>
+        `;
+
+        resBox.innerHTML = htmlTable;
+
+    } catch (error) {
+        errorBox.innerText = `Error: ${error.message}`;
+    }
+}
+
+// --- Inicialización ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Inicializa con los ejemplos al cargar
+    resolverEcuacionParseada();
+});
+</script>
+</body>
+</html>
